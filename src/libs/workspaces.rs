@@ -14,6 +14,10 @@ use crate::{
 	},
 	CONFIG,
 };
+use mlua::{
+	UserData,
+	UserDataMethods,
+};
 use smithay::{
 	backend::renderer::{
 		element::{
@@ -56,7 +60,18 @@ impl StrataWindow {
 	fn render_location(&self) -> Point<i32, Logical> {
 		self.rec.loc - self.smithay_window.geometry().loc
 	}
+
+	pub fn close(&mut self) {
+		self.smithay_window.toplevel().send_close();
+	}
 }
+
+impl UserData for StrataWindow {
+	fn add_methods<'lua, M: UserDataMethods<'lua, Self>>(methods: &mut M) {
+		methods.add_method_mut("close", |_, this, _: ()| Ok(this.close()));
+	}
+}
+
 impl Workspace {
 	pub fn new() -> Self {
 		Workspace { windows: Vec::new(), outputs: Vec::new(), layout_tree: Dwindle::new() }

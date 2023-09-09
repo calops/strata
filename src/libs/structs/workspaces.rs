@@ -1,7 +1,3 @@
-use mlua::{
-	UserData,
-	UserDataMethods,
-};
 use smithay::{
 	desktop::{
 		LayerSurface,
@@ -53,12 +49,4 @@ pub enum FocusTarget {
 	Window(Window),
 	LayerSurface(LayerSurface),
 	Popup(PopupKind),
-}
-
-impl UserData for StrataWindow {
-	fn add_methods<'lua, M: UserDataMethods<'lua, Self>>(methods: &mut M) {
-		methods.add_method_mut("close", |_, this, _: ()| {
-			Ok(this.smithay_window.toplevel().send_close())
-		});
-	}
 }
