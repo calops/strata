@@ -141,9 +141,9 @@ pub fn config_derive(input: TokenStream) -> TokenStream {
 				}
 			}
 		}
-		_ => {
+		syn::Data::Union(_) => {
 			quote_spanned! {
-				input.ident.__span() => compile_error!("Config can only be derived for structs and enums");
+				input.ident.__span() => compile_error!("`#[derive(Config)]` cannot be used on unions");
 			}
 		}
 	}
